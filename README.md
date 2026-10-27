@@ -1,23 +1,23 @@
 # Cloud Cost & Governance Automation
 
-An operational automation project demonstrating proactive cost optimization and security auditing in Microsoft Azure using PowerShell.
-
-This project provides automated discovery of idle resources and security misconfigurations. It targets common sources of wasted cloud spend (unattached disks, orphaned network interfaces) and governance risks (open management ports), demonstrating practical cloud operations and administration capabilities.
-
-## Status and Technology
-
 ![PowerShell](https://img.shields.io/badge/PowerShell-Automation-5391FE?logo=powershell&logoColor=white)
 ![Azure](https://img.shields.io/badge/Azure-Cloud_Operations-0078D4?logo=microsoftazure&logoColor=white)
 ![Security](https://img.shields.io/badge/Security-Least_Privilege-2ea44f)
 ![Cost Management](https://img.shields.io/badge/FinOps-Cost_Optimization-0078D4)
 
+An operational automation project demonstrating proactive cost optimization and security auditing in Microsoft Azure using PowerShell.
+
+This project provides automated discovery of idle resources and security misconfigurations. It targets common sources of wasted cloud spend (unattached disks, orphaned network interfaces) and governance risks (open management ports), demonstrating practical cloud operations and administration capabilities.
+
 ## Key Features and Highlights
 
-- **Unattached Disk Detection:** Identifies Managed Disks with an `Unattached` state to prevent unnecessary storage billing.
-- **Orphaned NIC Discovery:** Finds Network Interfaces not associated with any active Virtual Machine.
-- **Security Governance Auditing:** Scans Network Security Groups (NSGs) for inbound rules exposing sensitive management ports (e.g., 3389 RDP, 22 SSH) to the internet.
-- **Safe Execution:** Uses read-only queries ensuring zero impact on active production workloads.
-- **Zero Embedded Secrets:** Relies entirely on the active Microsoft Entra ID authentication session.
+| Capability | Operational Purpose |
+| :--- | :--- |
+| **Unattached Disk Detection** | Identifies Managed Disks with an `Unattached` state to prevent unnecessary storage billing. |
+| **Orphaned NIC Discovery** | Finds Network Interfaces not associated with any active Virtual Machine. |
+| **Security Governance Auditing** | Scans Network Security Groups (NSGs) for inbound rules exposing sensitive management ports (e.g., 3389 RDP, 22 SSH) to the internet. |
+| **Safe Execution** | Uses read-only queries ensuring zero impact on active production workloads. |
+| **Zero Embedded Secrets** | Relies entirely on the active Microsoft Entra ID authentication session. |
 
 ## Architecture and Operations Workflow
 
@@ -26,9 +26,9 @@ flowchart TD
     A["Cloud Administrator"] -->|Connect-AzAccount| B["Microsoft Entra ID"]
     B -->|Authenticated Session| C["PowerShell Auditing Scripts"]
     C -->|Read-Only Query| D["Azure Resource Manager API"]
-    D --> E["Managed Disks: DiskState == Unattached"]
-    D --> F["Network Interfaces: VirtualMachine == null"]
-    D --> G["NSG Rules: Inbound Allow 3389/22 from Internet"]
+    D --> E["Managed Disks<br/>DiskState == Unattached"]
+    D --> F["Network Interfaces<br/>VirtualMachine == null"]
+    D --> G["NSG Inbound Rules<br/>Allow 3389 / 22 from Internet"]
     E --> H["Console Output & Governance Report"]
     F --> H
     G --> H
@@ -59,11 +59,11 @@ This project directly addresses cloud governance and FinOps principles:
 
 The logic was validated in an isolated Azure environment (`germanywestcentral`) containing intentionally misconfigured and orphaned resources.
 
-**Observed Validation Results:**
-
-- **`unattached-disks.ps1`**: Successfully identified `disk-lab-unattached` (1GB Standard_LRS) with `DiskState = Unattached`.
-- **`orphaned-nics.ps1`**: Successfully identified `nic-lab-orphaned` with `ProvisioningState = Succeeded` and no attached VM.
-- **`vulnerable-rules.ps1`**: Successfully detected the inbound rule `Allow-RDP-Internet` in `nsg-lab-vulnerable` exposing port `3389` to `*`.
+| Script | Target Anomaly | Observed Validation Result |
+| :--- | :--- | :--- |
+| `unattached-disks.ps1` | Unattached Managed Disks | Identified `disk-lab-unattached` (1GB Standard_LRS) with `DiskState = Unattached`. |
+| `orphaned-nics.ps1` | Unassociated Network Interfaces | Identified `nic-lab-orphaned` (`ProvisioningState = Succeeded`) with no attached VM. |
+| `vulnerable-rules.ps1` | Exposed Management Ports | Flagged rule `Allow-RDP-Internet` in `nsg-lab-vulnerable` exposing port `3389` to `*`. |
 
 ## Usage Instructions
 
@@ -121,9 +121,10 @@ azure-cost-governance-automation/
 
 ## Technologies Used
 
-- **Cloud Platform:** Microsoft Azure
-- **Compute & Storage:** Azure Managed Disks
-- **Networking:** Azure Virtual Network, Network Interfaces (NIC), Network Security Groups (NSG)
-- **Identity & Security:** Microsoft Entra ID, Azure RBAC
-- **Automation:** PowerShell, Azure PowerShell (`Az`) Module
-
+| Category | Technology |
+| :--- | :--- |
+| **Cloud Platform** | Microsoft Azure |
+| **Compute & Storage** | Azure Managed Disks |
+| **Networking** | Azure Virtual Network, Network Interfaces (NIC), Network Security Groups (NSG) |
+| **Identity & Security** | Microsoft Entra ID, Azure RBAC |
+| **Automation** | PowerShell, Azure PowerShell (`Az`) Module |
